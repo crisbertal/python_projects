@@ -22,20 +22,12 @@ block_size = 20
 x_food = random.randint(0, (SCREEN_WIDTH - block_size)/20) * 20 
 y_food = random.randrange(0, SCREEN_HEIGHT - block_size, 20)
 
-def new_snake_position():
-    # x, y, x_lead, y_lead
-    return SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0
-
-def new_food_position():
-    x = random.randint(0, (SCREEN_WIDTH - block_size)/20) * 20 
-    y = random.randrange(0, SCREEN_HEIGHT - block_size, 20)
-    return x, y
-
-
-
 # functions setup
 pygame.init()
 display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+score = 0
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # tickrate
 clock = pygame.time.Clock()
@@ -50,7 +42,14 @@ def draw_grid():
                                block_size, block_size)
             pygame.draw.rect(display, white, rect, 1)
 
+def new_snake_position():
+    # x, y, x_lead, y_lead
+    return SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0
 
+def new_food_position():
+    x = random.randint(0, (SCREEN_WIDTH - block_size)/20) * 20 
+    y = random.randrange(0, SCREEN_HEIGHT - block_size, 20)
+    return x, y
 
 '''
 GAME LOOP
@@ -79,19 +78,25 @@ while True:
     # go out of bounds
     if x > SCREEN_WIDTH - block_size or x < 0 or y > SCREEN_HEIGHT - block_size or y < 0:
         x, y, x_lead, y_lead = new_snake_position()
+        score = 0
     
     # TO EAT
     if x == x_food and y == y_food:
         x_food, y_food = new_food_position()
+        score += 1
 
     # movement
     x += x_lead
     y += y_lead
 
-    
     # drawing
     display.fill(black)
     # draw_grid()
     pygame.draw.rect(display, red, (x, y, block_size, block_size))
     pygame.draw.rect(display, blue, (x_food, y_food, block_size, block_size))
+
+    # score text
+    textsurface = myfont.render('Score: ' + str(score), False, white)
+    display.blit(textsurface,(20,10))
+
     pygame.display.update()
