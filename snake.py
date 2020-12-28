@@ -19,7 +19,7 @@ x, y = SCREEN_WIDTH/2, SCREEN_HEIGHT/2
 x_lead, y_lead = 0, 0
 block_size = 20 
 
-x_food = random.randrange(0, SCREEN_WIDTH, 20) 
+x_food = random.randint(0, SCREEN_WIDTH/20) * 20 
 y_food = random.randrange(0, SCREEN_HEIGHT, 20)
 
 # functions setup
@@ -64,10 +64,14 @@ while True:
     if x > SCREEN_WIDTH or x < 0 or y > SCREEN_HEIGHT or y < 0:
         x, y = SCREEN_WIDTH/2, SCREEN_HEIGHT/2
         x_lead, y_lead = 0, 0
-
     
+    # TO EAT
+    if x == x_food and y == y_food:
+        x_food = random.randint(0, SCREEN_WIDTH/20) * 20 
+        y_food = random.randrange(0, SCREEN_HEIGHT, 20)
 
-    clock.tick(30)
+
+    clock.tick(24)
 
     # movement
     x += x_lead
@@ -75,7 +79,7 @@ while True:
     
     # drawing
     display.fill(black)
-    draw_grid()
+    # draw_grid()
     pygame.draw.rect(display, red, (x, y, block_size, block_size))
     pygame.draw.rect(display, blue, (x_food, y_food, block_size, block_size))
     pygame.display.update()
