@@ -19,8 +19,19 @@ x, y = SCREEN_WIDTH/2, SCREEN_HEIGHT/2
 x_lead, y_lead = 0, 0
 block_size = 20 
 
-x_food = random.randint(0, SCREEN_WIDTH/20) * 20 
-y_food = random.randrange(0, SCREEN_HEIGHT, 20)
+x_food = random.randint(0, (SCREEN_WIDTH - block_size)/20) * 20 
+y_food = random.randrange(0, SCREEN_HEIGHT - block_size, 20)
+
+def new_snake_position():
+    # x, y, x_lead, y_lead
+    return SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0
+
+def new_food_position():
+    x = random.randint(0, (SCREEN_WIDTH - block_size)/20) * 20 
+    y = random.randrange(0, SCREEN_HEIGHT - block_size, 20)
+    return x, y
+
+
 
 # functions setup
 pygame.init()
@@ -38,6 +49,8 @@ def draw_grid():
             rect = pygame.Rect(x*block_size, y*block_size,
                                block_size, block_size)
             pygame.draw.rect(display, white, rect, 1)
+
+
 
 '''
 GAME LOOP
@@ -60,22 +73,21 @@ while True:
                 x_lead = 0 
                 y_lead = 20
     
+    # set framerate
+    clock.tick(24)
+
     # go out of bounds
-    if x > SCREEN_WIDTH or x < 0 or y > SCREEN_HEIGHT or y < 0:
-        x, y = SCREEN_WIDTH/2, SCREEN_HEIGHT/2
-        x_lead, y_lead = 0, 0
+    if x > SCREEN_WIDTH - block_size or x < 0 or y > SCREEN_HEIGHT - block_size or y < 0:
+        x, y, x_lead, y_lead = new_snake_position()
     
     # TO EAT
     if x == x_food and y == y_food:
-        x_food = random.randint(0, SCREEN_WIDTH/20) * 20 
-        y_food = random.randrange(0, SCREEN_HEIGHT, 20)
-
-
-    clock.tick(24)
+        x_food, y_food = new_food_position()
 
     # movement
     x += x_lead
     y += y_lead
+
     
     # drawing
     display.fill(black)
